@@ -46,12 +46,21 @@ public class DiagnosticTest {
 			out.println(i);
 		}
 	}
+	public static void staticMethod(){
+		abstract class ClassDefinedInMethod1{} // A class defined in method can only be final or abstract, it cannot be static, public or protected
+		final class ClassDefinedInMethod2{} // A class defined in method can only be final or abstract, it cannot be static, public or protected
+		ClassDefinedInClass obj1 = new DiagnosticTest().new ClassDefinedInClass();//must have enclosing DiagnosticTest instance to create non-static inner class object
+		StaticClassDefinedInClass obj2 = new StaticClassDefinedInClass();
+		ClassDefinedInMethod1 obj3 = new ClassDefinedInMethod1(){};
+		ClassDefinedInMethod2 obj4 = new ClassDefinedInMethod2();
+	
+	}
 	@Test
 	public void question1(){
 		err.println("QUESTION 1");
 		abstract class ClassDefinedInMethod1{} // A class defined in method can only be final or abstract, it cannot be static, public or protected
 		final class ClassDefinedInMethod2{} // A class defined in method can only be final or abstract, it cannot be static, public or protected
-		ClassDefinedInClass obj1 = this.new ClassDefinedInClass();
+		ClassDefinedInClass obj1 = new ClassDefinedInClass();
 		StaticClassDefinedInClass obj2 = new StaticClassDefinedInClass();
 		ClassDefinedInMethod1 obj3 = new ClassDefinedInMethod1(){};
 		ClassDefinedInMethod2 obj4 = new ClassDefinedInMethod2();

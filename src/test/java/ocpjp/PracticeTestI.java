@@ -4,7 +4,9 @@ import static java.lang.System.err;
 import static java.lang.System.out;
 
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -69,9 +71,65 @@ public class PracticeTestI {
 	 * 
 	 */
 	@Test
+	public void question15(){
+		err.println("QUESTION 15");
+		class A implements AutoCloseable{
+
+			@Override
+            public void close() { //it is defined to throw Exception in AutoCloseable
+            }
+			
+		}
+		try(A a = new A()){}// since A.close() does not throw Exception, we can omit catch/finally block, but we have to keep the curly brackets
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question20(){
+		err.println("QUESTION 20");
+		List<Integer> numbers = Arrays.asList(10, 11, 13, 19, 5);
+		numbers.stream().filter(p -> p > 10).forEach(out::println);
+		numbers.parallelStream().sequential().parallel();//convert between sequential stream and parallel stream
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question26(){
+		err.println("QUESTION 26");
+		try{
+			//Thread.sleep is static method
+			//it does not throw exception if it is waked because of timeout
+			Thread.currentThread().sleep(1000);
+		}catch(InterruptedException ex){
+			out.println(ex.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question35(){
+		err.println("QUESTION 35");
+		Path path = Paths.get("abc");
+		try {
+	        Files.delete(path);
+        } catch (NoSuchFileException e) {//pay attention to this UNCHECKED exception
+        } catch (DirectoryNotEmptyException e) {//pay attention to this UNCHECKED exception
+        } catch (IOException e) {
+	        e.printStackTrace();
+        }
+	}
 	public void question49(){
 		err.println("QUESTION 49");
 		Stream<String> stream = Stream.of("1", "2", "3", "4", "5");
+		
+		//both averagingInt and averagingDouble return Double
 		Double d1 = stream.collect(Collectors.averagingInt(i -> Integer.parseInt(i)));
 		Double d2 = stream.collect(Collectors.averagingDouble(i -> Double.parseDouble(i)));
 	}
@@ -82,6 +140,9 @@ public class PracticeTestI {
 	@Test
 	public void question52(){
 		err.println("QUESTION 52");
+		BiFunction<String, String, Integer> biFunction = ( a, b ) -> a.compareTo(b);
+		Collections.sort(Arrays.asList(""), biFunction::apply);// usage of apply
+		Collections.sort(Arrays.asList(""), ( a, b ) -> a.compareTo(b));// usage of apply
 		
 	}
 
@@ -91,10 +152,6 @@ public class PracticeTestI {
 	@Test
 	public void question(){
 		err.println("QUESTION XX");
-		BiFunction<String, String, Integer> biFunction = ( a, b ) -> a.compareTo(b);
-		Collections.sort(Arrays.asList(""), biFunction::apply);// usage of apply
-		Collections.sort(Arrays.asList(""), ( a, b ) -> a.compareTo(b));// usage of apply
-		
 	}
 
 }
