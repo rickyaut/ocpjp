@@ -12,8 +12,12 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.DoubleFunction;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.Test;
@@ -138,12 +142,44 @@ public class PracticeTestI {
 	 * 
 	 */
 	@Test
-	public void question52(){
-		err.println("QUESTION 52");
+	public void question52_55(){
+		err.println("QUESTION 52, 55");
 		BiFunction<String, String, Integer> biFunction = ( a, b ) -> a.compareTo(b);
 		Collections.sort(Arrays.asList(""), biFunction::apply);// usage of apply
 		Collections.sort(Arrays.asList(""), ( a, b ) -> a.compareTo(b));// usage of apply
 		
+		IntStream ints = IntStream.of(3, 2, 1, 5, 3);
+		//allMatch stop executing once it finds an element which doesnot match the given predicate
+		ints.peek(out::print).allMatch(i -> i > 1);//321
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question59(){
+		err.println("QUESTION 59");
+		Optional<String> op = Stream.of("one", "two", "three").filter(s -> s.length() > 5).findFirst().flatMap(s -> Optional.of("4"));
+		out.println(op);//Optional.empty
+		
+		Optional<String[]> op2 = Optional.of(new String[]{"a", "b", "c"});
+		op2.filter(s -> s.length >0).ifPresent(s-> out.println(s.length));
+		
+		//ifPresent returns void, so orElse will not work
+		//op2.filter(s -> s.length >0).ifPresent(s-> out.println(s.length)).orElse(...);
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question62(){
+		err.println("QUESTION 62");
+		ToDoubleFunction<String> func = s -> Double.parseDouble(s);
+		Stream.of("100.0", "200.2", "45.4").mapToDouble(func);
+		
+		DoubleFunction<String> func2 = Double::toString;
+		Stream.of(100.1, 200.2).map(func2::apply);
 	}
 
 	/**
