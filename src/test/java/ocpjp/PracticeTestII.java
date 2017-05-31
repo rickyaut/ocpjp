@@ -3,10 +3,13 @@ package ocpjp;
 import static java.lang.System.err;
 import static java.lang.System.out;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -16,20 +19,20 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.OptionalInt;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
+import java.nio.file.attribute.DosFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.OptionalInt;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -236,10 +239,9 @@ public class PracticeTestII {
 
 		@Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-			Pattern p = Pattern.compile("...");
-			PathMatcher pm = FileSystems.getDefault().getPathMatcher("glob:...");
-			if(pm.matches(dir.getFileName())){
-				out.println(dir);
+			PathMatcher pm = FileSystems.getDefault().getPathMatcher("glob:*");//glob or regex
+			if(pm.matches(dir.getFileName())){// the method name is matches, not match
+				//out.println(dir);
 				f_q42 = true;
 			}
 			return FileVisitResult.CONTINUE;
@@ -250,7 +252,45 @@ public class PracticeTestII {
 	@Test
 	public void question42(){
 		err.println("QUESTION 42");
-		Path path= Paths.get(".");
+		Path path= Paths.get("");// Technically this is same as Paths.get("."), they are different only when it is printed
+		out.println(path.getParent());//getParent returns null when the current path is root
+		try {
+	        BasicFileAttributes basicAttrs = Files.readAttributes(path, BasicFileAttributes.class);
+	        out.println(String.format("%s, %s, %s, %s", /*basicAttrs.fileKey(), */basicAttrs.isSymbolicLink(), basicAttrs.isDirectory(), basicAttrs.isRegularFile(), basicAttrs.isOther()));
+	        DosFileAttributes dosAttrs = Files.readAttributes(path, DosFileAttributes.class);
+	        out.println(String.format("%s, %s, %s", dosAttrs.isReadOnly(), dosAttrs.isSystem(), dosAttrs.isArchive() ));
+			try(Stream<Path> children = Files.list(path)){//children need to be closed, but it is auto-closed in this statement
+				children.forEach(out::println);
+			}
+	        PosixFileAttributes posixAttrs = Files.readAttributes(path, PosixFileAttributes.class); // throws UnsupportedOperationException on Windows
+	        out.println(String.format("%s, %s", posixAttrs.owner().toString(), posixAttrs.permissions().toString()));
+        } catch (IOException e1) {
+        } catch(UnsupportedOperationException e2){ //UnsupportedOperationException is unchecked Exception
+        	
+        }
+		out.println("now in second try catch");
+		try {
+	        Files.setAttribute(Paths.get("numbers.txt"), "dos:readonly", true); //setAttribute throws IOException
+			BufferedReader bufferedReader = Files.newBufferedReader(Paths.get("numbers.txt"));
+			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get("writablenumbers.txt"))){
+				//file will be created immediately,
+				//but nothing will be written to the file until the writer is closed
+				//in the try-resource statement, bufferedWriter is auto-closed
+				//so at end of this block, it is closed
+				bufferedWriter.write("abc");
+				bufferedWriter.newLine();
+				bufferedWriter.write("Oracle Certified", 10, 3);
+				bufferedWriter.newLine();
+				bufferedWriter.write("Java Developer");
+				bufferedWriter.newLine();
+				bufferedWriter.write(80);//character P is written
+			}
+			DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get("src"));
+			directoryStream.forEach(out::println);//src/main, src/test
+        } catch (IOException e1) {
+	        // TODO Auto-generated catch block
+	        e1.printStackTrace();
+        }
 		FileVisitor<Path> searcher = new Search();
 		try {
 	        Files.walkFileTree(path, searcher);
