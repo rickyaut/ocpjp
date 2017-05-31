@@ -321,8 +321,10 @@ public class DiagnosticTest {
 		String[] list = {"1", "2", "3"};
 		Arrays.parallelSetAll(list, x -> Integer.toString(x) + list[x]);
 		out.println(list[0]);
+		//lines returns Stream
 		Stream<String> lineStream = Files.lines(Paths.get("pom.xml"));
 		lineStream.skip(2).forEach(out::println);//skip first 2 lines
+		//readAllLines returns List
 		List<String> lines = Files.readAllLines(Paths.get("pom.xml"));
 		byte[] bytes = Files.readAllBytes(Paths.get("pom.xml"));
 		

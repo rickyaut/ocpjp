@@ -9,18 +9,38 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.MonthDay;
+import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.DoubleFunction;
+import java.util.function.Function;
+import java.util.function.ObjIntConsumer;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class PracticeTestI {
 	
@@ -173,13 +193,119 @@ public class PracticeTestI {
 	 * 
 	 */
 	@Test
-	public void question62(){
-		err.println("QUESTION 62");
+	public void question62_63_65(){
+		err.println("QUESTION 62, 63, 65");
 		ToDoubleFunction<String> func = s -> Double.parseDouble(s);
-		Stream.of("100.0", "200.2", "45.4").mapToDouble(func);
+		Stream.of("100.0", "200.2", "45.4").mapToDouble(func).forEach(out::print);;
 		
+		//understand when "apply" should be used
 		DoubleFunction<String> func2 = Double::toString;
-		Stream.of(100.1, 200.2).map(func2::apply);
+		Stream.of(100.1, 200.2).map(func2::apply).forEach(out::print);;
+		
+		BiFunction<Integer, Double, String> biFunc = (i, d) -> (i + d) + "";
+		Function<String, Double> function = Double::parseDouble;
+		// compile error because BiFunction does not have compose method: biFunc.compose(function).apply(2, 1.0);
+		// compile error because compose method of Function does not take BiFunction as parameter: function.compose(biFunc);
+		
+		//BinaryOperator, UnaryOperator
+		//BinaryOperator is sub-interface of BiFunction
+		//UnaryOperator is sub-interface of Function
+		//compose method is defined in Function, the return type is always "Function", 
+		//so the return type cannot be assigned to BiFunction, Operator, BinaryOperator, UnaryOperator
+		BinaryOperator<Integer> binOp = BinaryOperator.maxBy(Integer::compare);
+		out.println(binOp.apply(10, 15));
+		
+		out.println(Integer.rotateLeft(2, 5));
+		out.println(Integer.rotateRight(3, 1));
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question71(){
+		err.println("QUESTION 71");
+		ObjIntConsumer<String> consumer = (i, j) ->out.println(Integer.parseInt(i) +j);
+		consumer.accept("12", 3);
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question72(){
+		err.println("QUESTION 72");
+		Locale loc = new Locale.Builder().setLanguage("zh").setRegion("cn").build();
+		out.println("language: " + loc.getLanguage());
+		out.println("country: " + loc.getCountry());
+		out.println("Display Country: " + loc.getDisplayCountry());
+		out.println("Display Country en: " + loc.getDisplayCountry(new Locale("zh", "cn")));
+		out.println("Display Language: " + loc.getDisplayLanguage());
+		out.println("Display Language en: " + loc.getDisplayLanguage(new Locale("zh", "cn")));
+	}
+	
+	
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question78(){
+		err.println("QUESTION 78");
+		Instant instant = Instant.now();
+		instant.plus(1, ChronoUnit.DAYS);
+		instant.plus(Duration.ofDays(1));
+		instant.plus(Period.ofDays(1));
+		instant.plus(1, ChronoUnit.MILLIS);
+		instant.plus(Duration.ofMillis(1));
+		instant.plusMillis(1);
+		
+		//following code has compilation error, Instant only has plusHour, plusSeconds, plusMillis and plusNano
+		//instant.plusDay(1);
+		//instant.plusDuration(1, ChronoUnit.xxx);
+		
+		//following code has compilation error, Period is date-based, no hours, minutes, seconds
+		//instant.plus(Period.ofHour(1));
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question_80(){
+		err.println("QUESTION 80");
+		LocalTime time1 = LocalTime.of(10, 10);
+		LocalTime time2 = time1.plusHours(9).plusMinutes(50);
+		out.println(Duration.between(time1, time2).toHours());//9
+		out.println(Duration.between(time2, time1).toMinutes());//9
+		
+		LocalDate date1 = LocalDate.of(2017, 4, 3);
+		LocalDate date2 = date1.plusDays(20).plusMonths(1);
+		out.println(Period.between(date1, date2).toTotalMonths());
+		out.println(Period.between(date2, date1).toTotalMonths());
+		
+		LocalDateTime dt1 = LocalDateTime.now();
+		LocalDateTime dt2 = dt1.plusDays(30).minusHours(2).plusSeconds(10);
+		out.println(Duration.between(dt1, dt2));//PT718H10S
+		out.println(Duration.between(dt2, dt1));//PT718H10SPT-718H-10S
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question_81(){
+		err.println("QUESTION 81");
+		Year year = Year.of(2010);
+		Month month = Month.APRIL;
+		assertEquals(month, Month.of(4));
+		YearMonth yearMonth = YearMonth.of(2010, Month.APRIL);
+		MonthDay monthDay = MonthDay.of(4, 10);
+		assertEquals(yearMonth.atDay(10), monthDay.atYear(year.getValue()));
+		DayOfWeek day = DayOfWeek.FRIDAY;
+		assertEquals(day, DayOfWeek.of(5));
 	}
 
 	/**

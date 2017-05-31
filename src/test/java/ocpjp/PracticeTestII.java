@@ -19,9 +19,126 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.Properties;
+import java.util.logging.Logger;
+
 import org.junit.Test;
 
 public class PracticeTestII {
+	public enum Value {
+		Value1, Value2();
+
+		// The modifier of enum constructor can only be private
+		private Value() {
+
+		}
+	}
+
+	/**
+	 * How to use Statement and ResultSet to retrieve and manipulate records
+	 */
+	@Test
+	public void question8() {
+		err.println("QUESTION 8");
+//		Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//		ResultSet rs = stmt.executeQuery("SELECT a, b FROM TABLE2");
+		// rs will be scrollable, will not show changes made by others,
+		// and will be updatable
+
+//		Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//		ResultSet rs = stmt.executeQuery("SELECT a, b FROM TABLE2");
+		// rs will be scrollable, will not show changes made by others,
+		// and will be updatable
+
+//		rs.moveToInsertRow(); // moves cursor to the insert row
+//		rs.updateString(1, "AINSWORTH"); // updates the
+		// first column of the insert row to be AINSWORTH
+//		rs.updateInt(2, 35); // updates the second column to be 35
+//		rs.updateBoolean(3, true); // updates the third column to true
+//		rs.insertRow();
+//		rs.moveToCurrentRow();
+
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question13() {
+		err.println("QUESTION 13");
+		try {
+			Class.forName("com.mysql.ss");
+			DriverManager.registerDriver(new Driver(){
+
+				@Override
+				public Connection connect(String url, Properties info) throws SQLException {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public boolean acceptsURL(String url) throws SQLException {
+					// TODO Auto-generated method stub
+					return false;
+				}
+
+				@Override
+				public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public int getMajorVersion() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				@Override
+				public int getMinorVersion() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				@Override
+				public boolean jdbcCompliant() {
+					// TODO Auto-generated method stub
+					return false;
+				}
+
+				@Override
+				public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+					// TODO Auto-generated method stub
+					return null;
+				}});
+			DriverManager.getConnection("url");
+			DriverManager.getConnection("url", "userr", "password");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question16() {
+		err.println("QUESTION 16");
+		String line = System.console().readLine();
+		char[] password = System.console().readPassword();
+	}
+
 	/**
 	 * There are five constructors in the ConcurrentHashMap class
 	 * ConcurrentHashMap(): Creates a new empty map with a default initial capacity(16), load factor(0.75) and concurrencyLevel(16).
@@ -118,7 +235,7 @@ public class PracticeTestII {
 	 * 
 	 */
 	@Test
-	public void question(){
+	public void question() {
 		err.println("QUESTION XX");
 	}
 
