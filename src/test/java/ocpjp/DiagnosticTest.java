@@ -20,6 +20,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 import java.util.function.DoubleSupplier;
 import java.util.function.ToDoubleBiFunction;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -75,6 +76,7 @@ public class DiagnosticTest {
 	@Test
 	public void question5(){
 		err.println("QUESTION 5");
+		//FunctionMethod has only one method: apply(T), which take one parameter and return an object of the same type
 		//compile error - FunctionalMethod<String> f1 = String::length;
 		FunctionalMethod<String> f2 = String::toUpperCase;
 		//compile error - FunctionalMethod<String> f3 = s->return s;
@@ -87,6 +89,7 @@ public class DiagnosticTest {
 	 */
 	enum Value{
 		HIGH(1), MEDIUM(6), LOW(3);
+		//final field cannot be given a value twice in any execuction flow
 		private final int level;// final field can be initialized in constructor
 		private Value(int levelCode){
 			level = levelCode;
@@ -262,6 +265,7 @@ public class DiagnosticTest {
 	
 	/**
 	 * demonstrate How to use fork and join with ForkJoinPool
+	 * usage of RecursiveTask and RecursiveAction, they defined same methods, but the getRawResult of RecursiveAction always returns null
 	 */
 	static class Sum extends RecursiveTask<Long>{
 		static final int MAX = 5000;
@@ -376,6 +380,7 @@ public class DiagnosticTest {
 		map.put(1, 1.1);
 		map.put(2, 2.2);
 		map.put(1, 3.3);
+		ToDoubleFunction<String> td = s -> Double.parseDouble(s);
 		ToDoubleBiFunction<Double, Integer> tdf = (a, b) -> a+b;
 		map.forEach((k, v) -> out.println(tdf.applyAsDouble(v, k)));// applyAsDouble INSTEAD of apply is the only method defined in ToDoubleBiFunction
 		

@@ -1,7 +1,7 @@
 package ocpjp;
 
-import static java.lang.System.out;
 import static java.lang.System.err;
+import static java.lang.System.out;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,10 +41,11 @@ public class FreeTest {
 	@Test
 	public void question5(){
 		err.println("QUESTION 5");
-		Map<Integer, String> map = new TreeMap<>();// TreeMap allows null in value
+		Map<Integer, String> map = new TreeMap<>();// TreeMap and HashMap allows null in value, however null cannot be used as key
 		map.put(1, "One");
 		map.put(2, "Two");
 		map.put(3, "Three");
+		map.put(4, null);
 		map.replace(1, "1", null);// replace with happen only when both key and value match
 		map.replace(3, null);
 		out.println(map.values());
@@ -177,8 +178,8 @@ public class FreeTest {
 	@Test
 	public void question17(){
 		err.println("QUESTION 17");
-		out.println(DateFormat.getDateInstance(DateFormat.LONG, new Locale("en")).format(new Date()));
-		out.println(DateFormat.getDateInstance(DateFormat.SHORT, new Locale("en")).format(new Date()));
+		out.println(DateFormat.getDateInstance(DateFormat.LONG, new Locale("en")).format(new Date()));//May 29, 2017
+		out.println(DateFormat.getDateInstance(DateFormat.SHORT, new Locale("en")).format(new Date()));//5/29/17
 				
 	}
 
