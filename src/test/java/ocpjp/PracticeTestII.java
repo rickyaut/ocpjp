@@ -4,6 +4,9 @@ import static java.lang.System.err;
 import static java.lang.System.out;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -67,7 +70,10 @@ public class PracticeTestII {
 	}
 
 	/**
-	 * 
+	 * Correct: we can use Class.forName to register jdbc driver
+	 * Correct: We can use DriverManager.registerDriver to register jdbc driver
+	 * Wrong: The DriverManager.registerDriver() requires database url, which does not vary depending on our DBMS
+	 * Wrong: Using DriverManager.getConnection(), we can register JDBC driver by passing the database URL, which vary depending on our DBMS.
 	 */
 	@Test
 	public void question13() {
@@ -78,52 +84,43 @@ public class PracticeTestII {
 
 				@Override
 				public Connection connect(String url, Properties info) throws SQLException {
-					// TODO Auto-generated method stub
 					return null;
 				}
 
 				@Override
 				public boolean acceptsURL(String url) throws SQLException {
-					// TODO Auto-generated method stub
 					return false;
 				}
 
 				@Override
 				public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-					// TODO Auto-generated method stub
 					return null;
 				}
 
 				@Override
 				public int getMajorVersion() {
-					// TODO Auto-generated method stub
 					return 0;
 				}
 
 				@Override
 				public int getMinorVersion() {
-					// TODO Auto-generated method stub
 					return 0;
 				}
 
 				@Override
 				public boolean jdbcCompliant() {
-					// TODO Auto-generated method stub
 					return false;
 				}
 
 				@Override
 				public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-					// TODO Auto-generated method stub
 					return null;
 				}});
 			DriverManager.getConnection("url");
 			DriverManager.getConnection("url", "userr", "password");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -168,24 +165,56 @@ public class PracticeTestII {
 		map = new ConcurrentHashMap<String, Integer>(10);
 	}
 
+	/**
+	 * 
+	 */
+	@Test
+	public void question_39() {
+		err.println("QUESTION 39");
+		ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+		long[] threadIDs = threadMXBean.findDeadlockedThreads();
+		ThreadInfo[] threadInfos = threadMXBean.getThreadInfo(threadIDs, true, true);
+		for(ThreadInfo info : threadInfos){
+			out.println(String.format("ThreadID: %s, ThreadName: %s, LockerName: %s, LockOwnerId: %s, LockOwnerName: %s, LockState: %s, BlockedTime: %d", 
+					info.getThreadId(), info.getThreadName(), 
+					info.getLockName(), info.getLockOwnerId(), info.getLockOwnerName(), 
+					info.getThreadState(), info.getBlockedTime()));
+		}
+	}
+
+	/**
+	 * https://docs.oracle.com/javase/tutorial/collections/streams/reduction.html
+	 * 
+	 * how it works for reduce and collect
+	 */
 	@Test
 	public void question40_41(){
 		err.println("QUESTION 40, 41");
 		IntStream ints = IntStream.of(11, 2, 7, 32, 4, 8, 21, 9);
+		Stream<Integer> stream = Stream.of(11, 2, 7, 32, 4, 8, 21, 9);
 		
 		//Pay attention to the return type
 		//the usage of reduce
 		OptionalInt opt = ints.filter(in -> in %2 == 0).reduce(Integer::sum);
+		int sum = ints.filter(in -> in % 2 == 0).reduce(0, (a, b) -> a + b);
+		sum = stream.reduce(0, (a, b) -> a + b);
 		out.println(opt); //OptionalInt[46]
 		
 		Stream<String> ins = Stream.of("1", "2", "3", "2", "1", "4").distinct();
+		Stream<String> ins2 = ins.onClose(new Runnable(){
+
+			@Override
+			public void run() {
+				out.println("closing");
+			}});
 		//<R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
-		String result = ins.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+		String result = ins2.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 		out.println(result);//1234
+		ins2.close();
 	}
 
 	/**
-	 * 
+	 * https://en.wikipedia.org/wiki/Glob_(programming)
 	 */
 	static boolean f_q42;
 	final class Search extends SimpleFileVisitor<Path>{
@@ -237,6 +266,7 @@ public class PracticeTestII {
 	@Test
 	public void question() {
 		err.println("QUESTION XX");
+		new StringBuilder().append(new StringBuilder());
 	}
 
 }
