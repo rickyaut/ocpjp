@@ -27,11 +27,21 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.UnsupportedTemporalTypeException;
+import java.util.Locale;
 import java.util.OptionalInt;
 import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.ResourceBundle.Control;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.LongFunction;
+import java.util.function.LongToIntFunction;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.junit.Test;
@@ -50,7 +60,7 @@ public class PracticeTestII {
 	 * How to use Statement and ResultSet to retrieve and manipulate records
 	 */
 	@Test
-	public void question8() {
+	public void questions8() {
 		err.println("QUESTION 8");
 //		Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 //		ResultSet rs = stmt.executeQuery("SELECT a, b FROM TABLE2");
@@ -172,7 +182,7 @@ public class PracticeTestII {
 	 * 
 	 */
 	@Test
-	public void question_39() {
+	public void question39() {
 		err.println("QUESTION 39");
 		ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 		long[] threadIDs = threadMXBean.findDeadlockedThreads();
@@ -298,6 +308,106 @@ public class PracticeTestII {
         } catch (IOException e) {
 	        e.printStackTrace();
         }
+	}
+
+	/**
+	 * All these function interfaces do not inherit from each another
+	 * 
+	 * Consumer, BiConsumer, DoubleConsumer, IntConsumer, LongConsumer, 
+	 * 		all of them have a function called "accept", and it returns VOID
+	 * 		all of them have a default function called "andThen", the difference is
+	 * 			* Consumer.andThen takes Consumer as parameter
+	 * 			* IntConsumer.andThen takes IntConsumer as parameter
+	 * ObjDoubleConsumer, ObjIntConsumer, ObjLongConsumer
+	 * 		above consumers only have accept(T t, long|int|double v) function
+	 * Suppliers
+	 * 		Supplier has get() method
+	 * 		DoubleSupplier - getAsDouble
+	 *  	IntSupplier - getAsInt, 
+	 *  	LongSupplier - getAsLong
+	 * Functions
+	 * 		Function has these methods: "identity", "andThen", "apply", "compose"
+	 * 		DoubleToIntFunction, DoubleToLongFunction, IntToDouble, IntToLong, LongToDouble, LongToInt
+	 * 			they only have one method defined, could be applyAsInt, applyAsLong, applyAsDouble
+	 * 		BiFunction, DoubleFunction, IntFunction, LongFunction 
+	 * 			only has "apply" method
+	 * 		ToIntFunction, ToDoubleFunction, ToLongFunction 
+	 * 		ToIntBiFunction, ToDoubleBiFunction, toLongBiFunction
+	 * Operators represents an operation on type TT and returns an object of type TT
+	 * 		BinaryOperator extends from BiFunction, it has "maxBy" and "minBy"
+	 * 		UnaryOperator exteds from Function, it has "identity" method
+	 * 		[Int|Double|Long]BinaryOperator, [Int|Double|Long]UnaryOperator don't extends from anything
+	 * 			* the methods defined in them are: applyAsLong, applyAsInt, applyAsDouble, which is same as the corresponding Function class
+	 * Predicates
+	 * 		all Predicate functional interfaces implemented default method "and", "or", "negate"
+	 * 		all Predicate functional interface has has "test" method
+	 * 		Predicate, 
+	 * 		BiPredicate, DoublePredicate, IntPredicate, LongPredicate
+	 * in summary:
+	 * 		applyAsLong has been defined in Function and Operator, getAsLong is defined in Supplier
+	 * 		no class names or function names in this package contains "Integer", it is "Int" instead
+	 */
+	@Test
+	public void question62_64_65() {
+		err.println("QUESTION 62, 64, 65");
+		LongStream ls = LongStream.of(1, 2, 3, 4);
+		//This has compilation error because map|flatMap of LongStream should return LongStream only
+		// ls.flatMap(l -> IntStream.of((int)l));
+		LongFunction<LongStream> f1 = l -> LongStream.of(2*l);
+		LongStream.of(1, 2, 3, 4).flatMap(f1);//parameter for flatMap must have the ability to convert something to Stream object
+		LongToIntFunction f2 = l -> (int)l;
+		LongStream.of(1, 2, 3, 4).mapToInt(f2);
+		
+		//compilation error, the parameter type here cannot be primitive type
+		//ToIntFunction<long> f3 = l -> (int)l;
+		LongFunction<Integer> f3 = l -> (int)l;
+		LongStream.of(1, 2, 3, 4).mapToObj(f3);
+		
+		//Compilation eror because the parameter has to be LongToIntFunction explicitly
+		//LongStream.of(1, 2, 3, 4).mapToInt(f3);
+		
+		Function<Integer, Double> f4 = t -> t.intValue()*1.0;
+		//compilation error as identity returns Function<Object, Object>
+		//Function<Integer, Double> f5 = Function.identity();
+		Function<Integer, Integer> f6 = Function.identity();
+		out.println(f6.apply(13));
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question71() {
+		err.println("QUESTION 71");
+		ResourceBundle rb1 = ResourceBundle.getBundle("basename");
+		//same as Locale.CHINESE, Locale.PRC, Locale.SIMPLIFIED_CHINESE
+		ResourceBundle rb2 = ResourceBundle.getBundle("baseName", Locale.CHINA);
+		ResourceBundle rb3 = ResourceBundle.getBundle("baseName", Control.getControl(Control.FORMAT_CLASS));
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question74() {
+		err.println("QUESTION 74");
+		try{
+			LocalDate d1 = LocalDate.of(2017, 1, 28);
+			//only support DAYS, MONTHS
+			//YEARS = MONTHS/12, DECADES = MONTHS/120, CENTRIES = MONTHS/1200, MILI = MONTHS/12000
+			//ERAS
+			//WEEKS = DAYS/7
+			//****HALF_DAYS is supported by LocalDate, but is supported by LocalTime and LocalDateTime
+			out.println(d1.until(LocalDate.of(2017, 2, 20), ChronoUnit.DAYS));
+			out.println(d1.until(LocalDate.of(2017, 2, 25), ChronoUnit.WEEKS));
+			//print 1
+			out.println(LocalDate.of(2017, 1, 28).until(LocalDate.of(2017, 2, 28), ChronoUnit.MONTHS));
+			//print 0
+			out.println(LocalDate.of(2017, 1, 29).until(LocalDate.of(2017, 2, 28), ChronoUnit.MONTHS));
+		}catch(UnsupportedTemporalTypeException e1){
+			
+		}
 	}
 
 	/**

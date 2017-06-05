@@ -266,6 +266,15 @@ public class PracticeTestI {
 		//instant.plusDay(1);
 		//instant.plusDuration(1, ChronoUnit.xxx);
 		
+		//getUnits is not class level method
+		out.println(Duration.ofDays(2).plusHours(3).getUnits());//[Seconds, Nanos]
+		out.println(Duration.ofDays(2).plusHours(3));//PT51H
+		out.println(Duration.ofDays(2).plusHours(3).plusMinutes(2).plusSeconds(4).plusMillis(12));//PT51H2M4.012S
+		
+		out.println(Period.ofWeeks(2).plusDays(1).getUnits());//[Years, Months, Days]
+		out.println(Period.ofWeeks(2).plusDays(1));//P15D
+		out.println(Period.ofWeeks(2).plusDays(1).plusYears(2).plusMonths(3));//P2Y3M15D
+		
 		//following code has compilation error, Period is date-based, no hours, minutes, seconds
 		//instant.plus(Period.ofHour(1));
 	}

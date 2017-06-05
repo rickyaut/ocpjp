@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 import java.util.function.DoubleSupplier;
@@ -173,6 +174,8 @@ public class DiagnosticTest {
 	public void question21(){
 		err.println("QUESTION 21");
 		Stream<String> stream = Stream.of("A", "AB", "ABC", "ABCD", "AB");
+		//findAny returns Optional
+		//orElse returns the object if presented, otherwise return the parameter(of the same type)
 		out.println(stream.filter(s->s.length() > 2).filter(s->s.indexOf("C")>-1).findAny().orElse("None"));
 	}
 	
@@ -319,8 +322,9 @@ public class DiagnosticTest {
 	public void question35_36_37_38_39() throws IOException{
 		err.println("QUESTION 35, 36, 37, 38, 39");
 		out.println(Stream.of(3, 4, 5, 6, 7, 8, 9).parallel().collect(Collectors.groupingByConcurrent(i -> (Integer)i % 2 == 0 ? 1: 2)));
-		//below statement results in compile error
-		//out.println(Stream.of(3, 4, 5, 6, 7, 8, 9).parallel().collect(Collectors.groupingByConcurrent(i -> i % 2 == 0 ? 1: 2)));
+		ConcurrentMap<Object, List<Integer>> map = Arrays.asList(3, 4, 5, 6, 7, 8, 9).parallelStream().collect(Collectors.groupingByConcurrent(i -> i % 2 == 0 ? 1: 2));
+		//below statement results in compile error because return type 
+		//HashMap<Object, List<Integer>> map2 = Arrays.asList(3, 4, 5, 6, 7, 8, 9).parallelStream().collect(Collectors.groupingByConcurrent(i -> i % 2 == 0 ? 1: 2));
 		
 		String[] list = {"1", "2", "3"};
 		Arrays.parallelSetAll(list, x -> Integer.toString(x) + list[x]);
