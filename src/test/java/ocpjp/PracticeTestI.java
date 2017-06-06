@@ -279,12 +279,12 @@ public class PracticeTestI {
 		LocalTime time1 = LocalTime.of(10, 10);
 		LocalTime time2 = time1.plusHours(9).plusMinutes(50);
 		out.println(Duration.between(time1, time2).toHours());//9
-		out.println(Duration.between(time2, time1).toMinutes());//9
+		out.println(Duration.between(time2, time1).toMinutes());//-590
 		
 		LocalDate date1 = LocalDate.of(2017, 4, 3);
 		LocalDate date2 = date1.plusDays(20).plusMonths(1);
-		out.println(Period.between(date1, date2).toTotalMonths());
-		out.println(Period.between(date2, date1).toTotalMonths());
+		out.println(Period.between(date1, date2).toTotalMonths());//1
+		out.println(Period.between(date2, date1).toTotalMonths());//-1
 		
 		LocalDateTime dt1 = LocalDateTime.now();
 		LocalDateTime dt2 = dt1.plusDays(30).minusHours(2).plusSeconds(10);

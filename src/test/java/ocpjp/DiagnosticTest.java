@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Year;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -396,11 +400,30 @@ public class DiagnosticTest {
 	@Test
 	public void question70_71_78(){
 		err.println("QUESTION 70, 71, 78");
-		//How to use ResourceBundle
 		LocalDate ld1 = LocalDate.of(2015, 11, 25);
 		Year year = Year.of(2014);
-		out.println(ld1.adjustInto(year.atDay(1)));
-		out.println(year);
+		Year year2 = year.now();//return type is Year, not LocalDate
+		out.println(year2);//current year 2017
+		LocalDate ld2 = year.atDay(1);
+		out.println(ld1.adjustInto(ld2));//2015-11-25
+		out.println(ld1);//2015-11-25
+		out.println(ld1 == ld2);//false
+		out.println(year);//2014
+		out.println(ld1.adjustInto(year));//Unsupported field: EpochDay
+	}
+	
+	/**
+	 * 
+	 */
+	@Test
+	public void question84(){
+		err.println("QUESTION 84");
+		LocalTime time = LocalTime.of(11, 12, 13);
+		//ZonedDateTime.of(localDateTime, zone);  LocalDateTime
+		//ZonedDateTime.of(date, time, zone) LocalDate, LocalTime
+		//ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond, zone)
+		ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("Canada/Atlantic"));
+		
 	}
 	
 	/**
