@@ -33,8 +33,24 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import ocpjp.Outer.Inner;
+
+class Outer{
+	static class Inner{
+		
+	}
+}
 public class DiagnosticTest {
 	
+	@Override
+	public int hashCode() {//return type is int
+		return super.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) { //the parameter type is Object
+		return super.equals(obj);
+	}
+
 	/**
 	 * 
 	 */
@@ -59,6 +75,7 @@ public class DiagnosticTest {
 		StaticClassDefinedInClass obj2 = new StaticClassDefinedInClass();
 		ClassDefinedInMethod1 obj3 = new ClassDefinedInMethod1(){};
 		ClassDefinedInMethod2 obj4 = new ClassDefinedInMethod2();
+		Inner inner = new Inner();
 	
 	}
 	@Test
