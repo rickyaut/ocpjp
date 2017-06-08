@@ -6,12 +6,12 @@ import static java.lang.System.out;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.DoublePredicate;
@@ -126,6 +126,41 @@ public class PracticeTestIII {
 	/**
 	 * 
 	 */
+	class Member{
+		private String name;
+		private int age;
+		public Member(String name, int age) {
+	        super();
+	        this.name = name;
+	        this.age = age;
+        }
+		@Override
+        public int hashCode() {
+	        return name.length();
+        }
+		@Override
+        public boolean equals(Object obj) {
+	        return age == ((Member)obj).age;
+        }
+		@Override
+        public String toString() {
+	        return "Member [name=" + name + "]";
+        }
+	}
+	@Test
+	public void question32(){
+		err.println("QUESTION 32");
+		Set<Member> set = new HashSet<Member>();
+		set.add(new Member("Ricky", 30));
+		set.add(new Member("John", 30));
+		set.add(new Member("Sam", 30));
+		set.add(new Member("Cliff", 30));//the EQUAL element with same hashCode will be replaced 
+		out.println(set);// [Member [name=Sam], Member [name=John], Member [name=Ricky]]
+		set.add(new Member("Ricky", 32));
+		out.println(set);//[Member [name=Sam], Member [name=John], Member [name=Ricky], Member [name=Ricky]]
+		out.println(set.remove(new Member("Cliff", 30)));//if there is an EQUAL element
+		out.println(set);// [Member [name=Sam], Member [name=John], Member [name=Ricky]]
+	}
 	@Test
 	public void question38(){
 		err.println("QUESTION 38");

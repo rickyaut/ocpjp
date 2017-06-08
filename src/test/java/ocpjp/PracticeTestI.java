@@ -40,6 +40,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 public class PracticeTestI {
@@ -100,12 +101,24 @@ public class PracticeTestI {
 		class A implements AutoCloseable{
 
 			@Override
-            public void close() { //it is defined to throw Exception in AutoCloseable
+            public void close() { //it is defined in AutoCloseable to throw Exception
+            }
+			
+		}
+		class B implements AutoCloseable{
+
+			@Override
+            public void close() throws Exception{ //it is defined in AutoCloseable to throw Exception
             }
 			
 		}
 		try(A a = new A()){}// since A.close() does not throw Exception, we can omit catch/finally block, but we have to keep the curly brackets
 		
+		try(B a = new B()){// since B.close() does throw Exception, we cannot omit catch/finally block
+			
+		} catch (Exception e) {
+	        e.printStackTrace();
+        }
 	}
 
 	/**
@@ -129,6 +142,8 @@ public class PracticeTestI {
 			//Thread.sleep is static method
 			//it does not throw exception if it is waked because of timeout
 			Thread.currentThread().sleep(1000);
+			long timeout1 = 1500;
+			Thread.currentThread().sleep(timeout1);
 		}catch(InterruptedException ex){
 			out.println(ex.getMessage());
 		}
