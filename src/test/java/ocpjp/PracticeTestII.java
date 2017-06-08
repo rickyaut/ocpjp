@@ -380,8 +380,9 @@ public class PracticeTestII {
 	@Test
 	public void question71() {
 		err.println("QUESTION 71");
+		out.println(Locale.CHINESE.equals( new Locale("zh", "")));//true
 		ResourceBundle rb1 = ResourceBundle.getBundle("basename");
-		//same as Locale.CHINESE, Locale.PRC, Locale.SIMPLIFIED_CHINESE
+		//same as Locale.PRC, Locale.SIMPLIFIED_CHINESE
 		ResourceBundle rb2 = ResourceBundle.getBundle("baseName", Locale.CHINA);
 		ResourceBundle rb3 = ResourceBundle.getBundle("baseName", Control.getControl(Control.FORMAT_CLASS));
 	}

@@ -6,10 +6,21 @@ import static java.lang.System.out;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.DoublePredicate;
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
+import java.util.function.ToDoubleBiFunction;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -110,6 +121,111 @@ public class PracticeTestIII {
 		//remove, removeFist, removeLast return the removed object, otherwise throw NoSuchElementException
 		//remove(Object o), removeFirstOccurrence, , removeLastOccurrence return true/false
 		out.println(String.format("element: %d, poll: %d, element: %d, poll: %d", dq.element(), dq.poll(), dq.element(), dq.poll()));
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question38(){
+		err.println("QUESTION 38");
+		int ints[] = {4, 6, 8, 10};
+		Arrays.parallelPrefix(ints, Integer::sum);
+		out.println(Arrays.toString(ints)); //[4, 10, 18, 28]
+		ints = new int[]{4, 6, 8, 10};
+		Arrays.parallelPrefix(ints, (a, b) -> a + b);
+		out.println(Arrays.toString(ints));//[4, 10, 18, 28]
+		
+		out.println(Arrays.binarySearch(new int[]{4, 6, 8, 10}, 6));//1
+		out.println(Arrays.binarySearch(new int[]{4, 6/*inclusive*/, 8/*exclusive*/, 10}, 1, 3, 6));//1
+		out.println(Arrays.toString(Arrays.copyOf(new int[]{4, 6, 8, 10}, 10)));//[4, 6, 8, 10, 0, 0, 0, 0, 0, 0]
+		out.println(Arrays.toString(Arrays.copyOf(new int[]{4, 6, 8, 10}, 2)));//[4, 6]
+		out.println(Arrays.toString(Arrays.copyOfRange(new int[]{4, 6, 8, 10}, 2, 6)));//[8, 10, 0, 0]
+		out.println(Arrays.toString(Arrays.copyOfRange(new int[]{4, 6, 8, 10/*exclusive*/}, 2, 3)));//[8]
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question52(){
+		err.println("QUESTION 52");
+		List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
+		Optional<Integer> optional1 = ints.stream().findAny();
+		Optional<Integer> optional2 = ints.stream().findFirst();
+		Optional<Integer> optional3 = ints.stream().max(Integer::compare);
+		Optional<Integer> optional4 = ints.stream().min(Integer::compare);
+		IntStream intStream1 = ints.stream().mapToInt(Integer::intValue);
+		Stream<Integer> stream = intStream1.boxed();
+		
+		//IntOptional does not have filter or map method
+		Optional<Integer> optional5 = optional1.filter(i -> i>1);
+		Optional<Integer> optional6 = optional1.map(i -> i+1);
+		optional5.ifPresent(out::println);
+		
+		IntStream intStream2 = IntStream.of(1, 2, 3, 4, 5);
+		OptionalDouble optional11 = IntStream.of(1, 2, 3, 4, 5).average();
+		OptionalInt optional12 = IntStream.of(1, 2, 3, 4, 5).min();
+		OptionalInt optional13 = IntStream.of(1, 2, 3, 4, 5).max();
+		optional13.ifPresent(out::println);
+		
+		int sum = IntStream.of(1, 2, 3, 4, 5).sum();
+		long count = IntStream.of(1, 2, 3, 4, 5).count();//not int
+		
+		
+		Predicate<Double> pre1 = d -> d>1;
+		DoublePredicate pre2 = d -> d>1;
+		Predicate<Integer> pre3 = d -> d>1;
+		IntPredicate pre4 = d -> d > 1;
+		
+		// compile error
+		//IntStream.of(1, 2, 3, 4, 5).anyMatch(pre1);
+		// compile error
+		//IntStream.of(1, 2, 3, 4, 5).anyMatch(pre2);
+		// compile error
+		//IntStream.of(1, 2, 3, 4, 5).anyMatch(pre3);
+		IntStream.of(1, 2, 3, 4, 5).anyMatch(pre4);
+		
+		// compile error
+		//Stream.of(1, 2, 3, 4, 5).anyMatch(pre1);
+		// compile error
+		//Stream.of(1, 2, 3, 4, 5).anyMatch(pre2);
+		Stream.of(1, 2, 3, 4, 5).anyMatch(pre3);
+		// compile error
+		//Stream.of(1, 2, 3, 4, 5).anyMatch(pre4);
+
+		// compile error
+		//DoubleStream.of(1, 2, 3, 4, 5).anyMatch(pre1);
+		DoubleStream.of(1, 2, 3, 4, 5).anyMatch(pre2);
+		// compile error
+		//DoubleStream.of(1, 2, 3, 4, 5).anyMatch(pre3);
+		// compile error
+		//DoubleStream.of(1, 2, 3, 4, 5).anyMatch(pre4);
+		
+		Stream.of(1.0, 2.0, 3.0, 4.0, 5.0).anyMatch(pre1);
+		// compile error
+		//Stream.of(1.0, 2.0, 3.0, 4.0, 5.0).anyMatch(pre2);
+		// compile error
+		//Stream.of(1.0, 2.0, 3.0, 4.0, 5.0).anyMatch(pre3);
+		// compile error
+		//Stream.of(1.0, 2.0, 3.0, 4.0, 5.0).anyMatch(pre4);
+		
+		
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question61_62_64(){
+		err.println("QUESTION 61, 62, 64");
+		Stream<Double> stream2 = Stream.of(11.1, 12.2, 13.3);
+		Stream<Integer> list2 = stream2.flatMap(d -> Stream.of(d.intValue()));
+		
+		Map<Integer, Double> map = new HashMap<>();
+		ToDoubleBiFunction<Integer, Double> tdf = (a, b) -> a + b;
+		map.forEach((k, v) -> out.println(tdf.applyAsDouble(k, v)));
 	}
 
 	/**
