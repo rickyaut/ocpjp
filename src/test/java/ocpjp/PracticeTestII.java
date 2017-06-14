@@ -30,6 +30,8 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.UnsupportedTemporalTypeException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.OptionalInt;
 import java.util.Properties;
@@ -150,6 +152,16 @@ public class PracticeTestII {
 	}
 
 	/**
+	 * 
+	 */
+	@Test
+	public void question25() {
+		err.println("QUESTION 25");
+		List<String> lst = Arrays.asList("A", "a", "Ba");
+		lst.forEach(out::println);//forEachOrdered is only defined in Stream
+	}
+
+	/**
 	 * There are five constructors in the ConcurrentHashMap class
 	 * ConcurrentHashMap(): Creates a new empty map with a default initial capacity(16), load factor(0.75) and concurrencyLevel(16).
 	 * ConcurrentHashMap<int initialCapacity): Creates a new empty map with the specified initial capacity, and with default load factor(0.75 and concurrencyLevel(16).
@@ -208,6 +220,7 @@ public class PracticeTestII {
 		
 		//Pay attention to the return type
 		//the usage of reduce
+		//reduce returns Optional
 		OptionalInt opt = ints.filter(in -> in %2 == 0).reduce(Integer::sum);
 		int sum = ints.filter(in -> in % 2 == 0).reduce(0, (a, b) -> a + b);
 		sum = stream.reduce(0, (a, b) -> a + b);
@@ -221,6 +234,7 @@ public class PracticeTestII {
 				out.println("closing");
 			}});
 		//<R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
+		//collect is not returning Optional
 		String result = ins2.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 		out.println(result);//1234
 		ins2.close();

@@ -23,7 +23,9 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
+import java.util.function.BiFunction;
 import java.util.function.DoubleSupplier;
+import java.util.function.Function;
 import java.util.function.ToDoubleBiFunction;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
@@ -71,6 +73,8 @@ public class DiagnosticTest {
 	public static void staticMethod(){
 		abstract class ClassDefinedInMethod1{} // A class defined in method can only be final or abstract, it cannot be static, public or protected
 		final class ClassDefinedInMethod2{} // A class defined in method can only be final or abstract, it cannot be static, public or protected
+		//compilation eror 
+		//static class StaticClassInMethod{}
 		ClassDefinedInClass obj1 = new DiagnosticTest().new ClassDefinedInClass();//must have enclosing DiagnosticTest instance to create non-static inner class object
 		StaticClassDefinedInClass obj2 = new StaticClassDefinedInClass();
 		ClassDefinedInMethod1 obj3 = new ClassDefinedInMethod1(){};
@@ -248,8 +252,27 @@ public class DiagnosticTest {
 		map.put(3, "C");
 		map.put(4, "D");
 		map.remove("A");
-		map.remove(3, "C");
+		map.remove(3, "C");// the remove method that compare key and value is introduced in Java 8
 		map.remove(4, "B");
+		map.getOrDefault("3", "default value");// getOrDefault since 1.8, it is not called as getOrElse
+		//no stream method exist for map map.stream();
+		//If the specified key is not already associated with a value (or is mapped to null), attempts to compute its value using the given mapping function and enters it into this map unless null. 
+		//If the function returns null no mapping is recorded. If the function itself throws an (unchecked) exception, the exception is rethrown, and no mapping is recorded.
+		Function<? super Integer, ? extends String> mappingFunction = k -> String.valueOf(k);
+		out.println(map.computeIfAbsent(5, mappingFunction));//5
+		out.println(map);//{1=A, 2=B, 4=D, 5=5}
+		
+		//If the value for the specified key is present and non-null, attempts to compute a new mapping given the key and its current mapped value. 
+		//If the function returns null, the mapping is removed. If the function itself throws an (unchecked) exception, the exception is rethrown, and the current mapping is left unchanged.
+		BiFunction<? super Integer, ? super String, ? extends String> remappingFunction = (k, v) -> String.valueOf(k) + v;
+		out.println(map.computeIfPresent(5, remappingFunction ));//55
+		out.println(map);//{1=A, 2=B, 4=D, 5=55}
+		
+		//Attempts to compute a mapping for the specified key and its current mapped value (or null if there is no current mapping)
+		out.println(map.compute(5, remappingFunction));//555
+		out.println(map);//{1=A, 2=B, 4=D, 5=555}
+		
+		new HashMap<Integer, String>().putAll(map);
 		map.values().forEach(out::print);
 	}
 	

@@ -67,8 +67,8 @@ public class FreeTest {
 	 * Thread->Runnable
 	 * Executor.submit(Runnable)
 	 * Executor.submit(Callable)
-	 * Executor.invokeAll(Callable)
-	 * Executor.invokeAny(Callable)
+	 * Executor.invokeAll(Callable) returns List<Future>
+	 * Executor.invokeAny(Callable) returns result of one unguaranteed call(), not Future object
 	 * ScheduledExecutorService.schedule
 	 * ScheduledExecutorService.scheduleAtFixedRate
 	 * ScheduledExecutorService.scheduleWithFixedDelay
