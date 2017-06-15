@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.sql.rowset.CachedRowSet;
@@ -107,6 +109,8 @@ public class PracticeTestIV {
 		boolean result1 = ints.removeAll(ints.stream().filter(i -> i < 3).collect(Collectors.toList()));
 		
 		boolean result2 = ints.removeIf(i -> i< 7);
+		
+		Optional<Integer> anyIntegerr = ints.stream().findAny();
 	}
 
 	/**

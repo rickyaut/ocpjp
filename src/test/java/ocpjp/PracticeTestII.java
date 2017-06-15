@@ -286,6 +286,7 @@ public class PracticeTestII {
 			try(Stream<Path> children = Files.list(path)){//children need to be closed, but it is auto-closed in this statement
 				children.forEach(out::println);
 			}
+			//This will throw exception on Windows system
 	        PosixFileAttributes posixAttrs = Files.readAttributes(path, PosixFileAttributes.class); // throws UnsupportedOperationException on Windows
 	        out.println(String.format("%s, %s", posixAttrs.owner().toString(), posixAttrs.permissions().toString()));
         } catch (IOException e1) {
@@ -349,7 +350,7 @@ public class PracticeTestII {
 	 * 		ToIntBiFunction, ToDoubleBiFunction, toLongBiFunction
 	 * Operators represents an operation on type TT and returns an object of type TT
 	 * 		BinaryOperator extends from BiFunction, it has "maxBy" and "minBy"
-	 * 		UnaryOperator exteds from Function, it has "identity" method
+	 * 		UnaryOperator exteds from Function, it has STATIC "identity" method, nothing else
 	 * 		[Int|Double|Long]BinaryOperator, [Int|Double|Long]UnaryOperator don't extends from anything
 	 * 			* the methods defined in them are: applyAsLong, applyAsInt, applyAsDouble, which is same as the corresponding Function class
 	 * Predicates
