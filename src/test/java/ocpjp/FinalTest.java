@@ -6,6 +6,9 @@ import static java.lang.System.out;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,6 +117,36 @@ public class FinalTest {
 		Optional<String> op = Optional.of("10");
 		Optional<Integer> op1 = op.map( s -> Integer.parseInt(s));
 		Optional<Integer> op2 = op.flatMap( s -> Optional.of(Integer.parseInt(s)));
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question79(){
+		err.println("QUESTION 79");
+		Instant now = Instant.now();
+		out.println(now);//2017-06-16T03:54:23.598Z
+		//only these fields are supported:
+		// NANO_OF_SECOND
+		out.println(now.getLong(ChronoField.NANO_OF_SECOND));//598000000
+		out.println(now.get(ChronoField.NANO_OF_SECOND));//598000000
+		// MICRO_OF_SECOND
+		out.println(now.getLong(ChronoField.MICRO_OF_SECOND));//598000
+		out.println(now.get(ChronoField.MICRO_OF_SECOND));//598000
+		// MILLI_OF_SECOND
+		out.println(now.getLong(ChronoField.MILLI_OF_SECOND));//598
+		out.println(now.get(ChronoField.MILLI_OF_SECOND));//598
+		// INSTANT_SECONDS
+		out.println(now.getLong(ChronoField.INSTANT_SECONDS));//1497585263
+		//throw DateTimeException: Invalid value for InstantSeconds
+		out.println(now.get(ChronoField.INSTANT_SECONDS));
+		//throw UnsupportedTemporalTypeException
+		out.println(now.get(ChronoField.HOUR_OF_DAY));
+		out.println(now.getLong(ChronoField.HOUR_OF_DAY));
+		
+		//Period.toString() -- PxYxMxD
+		//Duration.toString() -- PTxHxMx.xS
 	}
 
 	/**
