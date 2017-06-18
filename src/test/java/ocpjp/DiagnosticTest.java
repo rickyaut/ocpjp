@@ -363,7 +363,7 @@ public class DiagnosticTest {
 		err.println("QUESTION 35, 36, 37, 38, 39");
 		out.println(Stream.of(3, 4, 5, 6, 7, 8, 9).parallel().collect(Collectors.groupingByConcurrent(i -> (Integer)i % 2 == 0 ? 1: 2)));
 		ConcurrentMap<Object, List<Integer>> map = Arrays.asList(3, 4, 5, 6, 7, 8, 9).parallelStream().collect(Collectors.groupingByConcurrent(i -> i % 2 == 0 ? 1: 2));
-		//below statement results in compile error because return type 
+		//below statement results in compile error because return type is ConcurrentHashMap, which is not inherited from HashMap
 		//HashMap<Object, List<Integer>> map2 = Arrays.asList(3, 4, 5, 6, 7, 8, 9).parallelStream().collect(Collectors.groupingByConcurrent(i -> i % 2 == 0 ? 1: 2));
 		
 		String[] list = {"1", "2", "3"};
@@ -449,8 +449,11 @@ public class DiagnosticTest {
 		Year year2 = year.now();//return type is Year, not LocalDate
 		out.println(year2);//current year 2017
 		LocalDate ld2 = year.atDay(1);
+		out.println("before: " + ld1);//2015-11-25
+		out.println("before: " + ld2);//2014-01-01
 		out.println(ld1.adjustInto(ld2));//2015-11-25
-		out.println(ld1);//2015-11-25
+		out.println("after: " + ld1);//2015-11-25
+		out.println("after: " + ld2);//2014-01-01
 		out.println(ld1 == ld2);//false
 		out.println(year);//2014
 		out.println(ld1.adjustInto(year));//Unsupported field: EpochDay
@@ -466,7 +469,10 @@ public class DiagnosticTest {
 		//ZonedDateTime.of(localDateTime, zone);  LocalDateTime
 		//ZonedDateTime.of(date, time, zone) LocalDate, LocalTime
 		//ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond, zone)
-		ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("Canada/Atlantic"));
+		ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("Canada/Atlantic"));
+		out.println(zdt);
+		out.println(zdt.toLocalDate() + " " + zdt.toLocalTime());//not default zone
+		out.println(zdt.toLocalDateTime());
 		
 	}
 	
