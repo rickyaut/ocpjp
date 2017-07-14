@@ -184,6 +184,7 @@ public class DiagnosticTest {
 	public void question19(){
 		err.println("QUESTION 19");
 		Map<String, Integer> map = new TreeMap<String, Integer>();
+		map.getOrDefault("Hello", 123);//available since java 8. method name is not getOrElse
 		//forEach(BiConsumer<? super K, ? super V> action) 
 		map.forEach((k, v) ->out.println(k));
 	}
@@ -260,6 +261,8 @@ public class DiagnosticTest {
 		//If the function returns null no mapping is recorded. If the function itself throws an (unchecked) exception, the exception is rethrown, and no mapping is recorded.
 		Function<? super Integer, ? extends String> mappingFunction = k -> String.valueOf(k);
 		out.println(map.computeIfAbsent(5, mappingFunction));//5
+		out.println(map);//{1=A, 2=B, 4=D, 5=5}
+		out.println(map.computeIfAbsent(6, (i) -> null));//null
 		out.println(map);//{1=A, 2=B, 4=D, 5=5}
 		
 		//If the value for the specified key is present and non-null, attempts to compute a new mapping given the key and its current mapped value. 
@@ -412,7 +415,8 @@ public class DiagnosticTest {
 	public void question53(){
 		err.println("QUESTION 53");
 		out.println("a=" + Optional.of("1").isPresent());//a=true
-		//out.println("b=" + Optional.of(null).isPresent());//NullPointerException
+		//NullPointerException
+		out.println("b=" + Optional.of(null));
 		out.println("c=" + Optional.ofNullable(null).isPresent());//c=false
 		out.println("d=" + Optional.empty().isPresent());//d=false
 		out.println("A=" + Optional.of("1").get());//A=1

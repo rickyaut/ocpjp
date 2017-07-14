@@ -48,6 +48,16 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
+class A{
+	protected int i;
+}
+
+class B extends A{
+	public static void method(){
+		A a = new A();
+		a.i = 1;
+	}
+}
 public class PracticeTestII {
 	public enum Value {
 		Value1, Value2();
@@ -159,6 +169,14 @@ public class PracticeTestII {
 		err.println("QUESTION 25");
 		List<String> lst = Arrays.asList("A", "a", "Ba");
 		lst.forEach(out::println);//forEachOrdered is only defined in Stream
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void question28() {
+		err.println("QUESTION 28");
 	}
 
 	/**

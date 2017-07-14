@@ -75,7 +75,7 @@ public class PracticeTestIII {
 			out.println(tmap.subMap("DD", "BB"));//fromKey > toKey
 		}catch(IllegalArgumentException ex){}
 		
-		//subMap is method of TreeMap class, not the method of Map interface of HashMap
+		//subMap is method of TreeMap class, not the method of Map interface, or HashMap class
 		SortedMap<String, String> subMap = tmap.subMap("BB", "DD");//BB=b
 		out.println(subMap);//{BB=b, CC=c}
 		subMap.put("BC", "bc");
@@ -174,11 +174,11 @@ public class PracticeTestIII {
 		out.println(Arrays.toString(ints));//[4, 10, 18, 28]
 		
 		out.println(Arrays.binarySearch(new int[]{4, 6, 8, 10}, 6));//1
-		out.println(Arrays.binarySearch(new int[]{4, 6/*inclusive*/, 8/*exclusive*/, 10}, 1, 3, 6));//1
+		out.println(Arrays.binarySearch(new int[]{4, 6, 8, 10}, 1/*inclusive*/, 3/*exclusive*/, 6));//1
 		out.println(Arrays.toString(Arrays.copyOf(new int[]{4, 6, 8, 10}, 10)));//[4, 6, 8, 10, 0, 0, 0, 0, 0, 0]
 		out.println(Arrays.toString(Arrays.copyOf(new int[]{4, 6, 8, 10}, 2)));//[4, 6]
 		out.println(Arrays.toString(Arrays.copyOfRange(new int[]{4, 6, 8, 10}, 2, 6)));//[8, 10, 0, 0]
-		out.println(Arrays.toString(Arrays.copyOfRange(new int[]{4, 6, 8, 10/*exclusive*/}, 2, 3)));//[8]
+		out.println(Arrays.toString(Arrays.copyOfRange(new int[]{4, 6, 8, 10}, 2, 3/*exclusive*/)));//[8]
 		
 	}
 
