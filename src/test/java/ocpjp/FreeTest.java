@@ -126,7 +126,8 @@ public class FreeTest {
 		Path path = Paths.get("pom.xml");
 		try {
 			out.println(path);
-	        out.println(Files.readAttributes(path, "*"));
+	        out.println(Files.readAttributes(path, "*"));//{lastAccessTime=2017-05-22T06:42:26.649902Z, lastModifiedTime=2017-05-24T06:21:16.32306Z, size=971, creationTime=2017-05-22T06:42:26.649902Z, isSymbolicLink=false, isRegularFile=true, fileKey=null, isOther=false, isDirectory=false}
+	        out.println(Files.readAttributes(path, "lastAccessTime"));//{lastAccessTime=2017-05-22T06:42:26.649902Z}
         } catch (IOException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();

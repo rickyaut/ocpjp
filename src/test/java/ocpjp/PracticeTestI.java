@@ -2,6 +2,7 @@ package ocpjp;
 
 import static java.lang.System.err;
 import static java.lang.System.out;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
@@ -21,11 +22,9 @@ import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -41,10 +40,35 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class PracticeTestI {
 	
+	/**
+	 * 
+	 */
+	@Test
+	public void question27(){
+		err.println("QUESTION 27");
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+	                Thread.sleep(2000);
+                } catch (InterruptedException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+                }
+			}
+		});
+		t.start();
+		out.println(new Date());
+		//wait until thread ends try{t.join();}catch(InterruptedException ex){}
+		//wait for 1 second only try{t.join(1000);}catch(InterruptedException ex){}
+		//maximum wait for 4 seconds, next statement is executed immediately after 4 seconds OR thread ends
+		try{t.join(4000);}catch(InterruptedException ex){}
+		out.println(new Date());
+	}
+
 	/**
 	 * Path.resolve
 	 * Path.relative
