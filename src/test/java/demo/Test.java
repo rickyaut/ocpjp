@@ -41,10 +41,9 @@ public class Test {
 	private static void method4(){
 		check("Ricky", d -> d.length() > 5);
 	}
-
+	
 	private static void check(String string, IC v) {
-	    // TODO Auto-generated method stub
-	    
+		System.out.println(v.isValid("Ricky") ? "valid" : "Invalid");
     }
 
 }
