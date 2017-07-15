@@ -317,8 +317,8 @@ public class DiagnosticTest {
 	 * demonstrate How to use fork and join with ForkJoinPool
 	 * usage of RecursiveTask and RecursiveAction, they defined same methods, but the getRawResult of RecursiveAction always returns null
 	 */
-	static class Sum extends RecursiveTask<Long>{
-		static final int MAX = 5000;
+	class Sum extends RecursiveTask<Long>{
+		static final int MAX = 1000;
 		int low, high, array[];
 		
 		Sum(int[] arr, int lo, int hi){
@@ -343,18 +343,14 @@ public class DiagnosticTest {
 	        	return leftAns + rightAns;
 	        }
         }
-		static long sumArray(int[] array){
-			ForkJoinPool fPool = new ForkJoinPool();
-			long sum = fPool.invoke(new Sum(array, 0, array.length));
-			return sum;
-		}
 	}
 	@Test
 	public void question34(){
-		err.println("QUESTION 34");
-		int a[] = new int[15000];
+		ForkJoinPool fPool = new ForkJoinPool();
+		int a[] = new int[15_000];
 		for(int x = 0; x < a.length; a[x++] = 1);
-		out.println(Sum.sumArray(a));
+		long sum = fPool.invoke(new Sum(a, 0, a.length));
+		out.println(sum);
 	}
 	
 	/**
